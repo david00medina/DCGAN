@@ -1,7 +1,8 @@
 import tensorflow as tf
 
-from BatchBuilder import BatchBuilder
+from DataBuilder.BatchBuilder import BatchBuilder
 from Trainer.DCGANTrainer import DCGANTrainer
+from tensorflow.examples.tutorials.mnist import input_data
 
 # Hyperparameters
 EPOCH = 10000  # 200
@@ -15,7 +16,7 @@ UNITS = 100
 DROPOUT = 0.3
 
 # Global settings
-BATCH_SIZE = 20
+BATCH_SIZE = 128
 CLASSES = ['A', 'B', 'C', 'D']
 
 
@@ -51,18 +52,20 @@ with tf.Session() as sess:
     plt.show()
 """
 DATASETS_DIR = 'data'
-WIDTH = 500
-HEIGHT = 375
+WIDTH = 28
+HEIGHT = 28
 
-mydata = BatchBuilder(DATASETS_DIR)
+# No funciona
+"""mydata = DataBuilder(DATASETS_DIR)
 all_datasets_path, labels, datasets, num_files = mydata.generate_datasets()
 all_batches = mydata.get_batches(all_datasets_path, labels, datasets, gray=True,
-                                 width=WIDTH, height=HEIGHT, center=False)
+                                 width=WIDTH, height=HEIGHT, center=False, resize=True)"""
 
 IMAGE_DIM = (WIDTH, HEIGHT, BATCH_SIZE)
 LATENT_DIM = (7, 7, BATCH_SIZE)
 NOISE_DIM = 100
 
+all_batches = input_data.read_data_sets("/tmp/data", one_hot=True)
 trainer = DCGANTrainer(IMAGE_DIM, LATENT_DIM, NOISE_DIM, all_batches,
                        EPOCH, LEARNING_RATE_GEN, LEARNING_RATE_DIS, BETA1, BETA2)
 
@@ -85,7 +88,7 @@ with tf.Session() as sess:
     #plot = plt.imshow(hola[0])
     #plt.show()
 
-"""mydata = bb.BatchBuilder(DATASETS_DIR)
+"""mydata = bb.DataBuilder(DATASETS_DIR)
 all_datasets_path, labels, datasets, num_files = mydata.generate_datasets()
 all_batches = mydata.get_batches(all_datasets_path, labels, datasets)"""
 """all_batches = get_batches(all_datasets_path, labels, datasets,
